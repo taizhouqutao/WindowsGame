@@ -135,7 +135,7 @@
     let MyTank = {};
     let Bricks = [];
     let Eagle = {};
-    const AllEnemy = 4;
+    const AllEnemy = 20;
     let HasEnemy = 0;
     let DisEnemy = 0;
     const Hero_Speed = 100;  //英雄速度，越大越慢
@@ -144,7 +144,8 @@
     const Fire_Speed = 50;  //普通炮弹速度，越大越慢
     const BigFire_Speed = 25;  //榴弹炮弹速度，越大越慢
     const Fire_Rate = 30;    //敌人开火几率（0~100%）
-    let lafe = 20;//生命
+    let inilafe = 20;
+    let lafe = inilafe;//生命
     let iceStep = 4;//冰块惯性
     const intTimeFunctions = [];//定时任务事件
     createBoard();
@@ -169,7 +170,7 @@
     // 游戏逻辑
     function startGame() {
         //初始化变量
-        lafe = 3;
+        lafe = inilafe;
         HasEnemy = 0;
         board = [];
         Tanks = [];
