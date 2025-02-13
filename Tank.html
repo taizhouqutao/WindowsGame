@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>俄罗斯方块游戏</title>
+    <title>坦克大战游戏</title>
     <meta name="viewport"
         content="width=device-width,initial-scale=0.3,minimum-scale=0.3,maximum-scale=0.3,user-scalable=no" />
     <style>
@@ -148,7 +148,11 @@
     let lafe = inilafe;//生命
     let iceStep = 4;//冰块惯性
     const intTimeFunctions = [];//定时任务事件
+    let score = 0;
+    let scoreBoard = null;
+    let highScore = localStorage.getItem('tankHighScore') || 0;
     createBoard();
+    createPoint();
     startGame();
 
     // 创建游戏面板
@@ -166,10 +170,23 @@
             }
         }
     }
-
+    // 创建记分牌
+    function createPoint()
+    {
+        scoreBoard = document.createElement('div');
+        scoreBoard.style.position = 'absolute';
+        scoreBoard.style.top = '10px';
+        scoreBoard.style.left = '10px';
+        scoreBoard.style.color = 'red';
+        scoreBoard.style.fontSize = '20px';
+        scoreBoard.style.zIndex = '1000';
+        document.body.appendChild(scoreBoard);
+    }
     // 游戏逻辑
     function startGame() {
         //初始化变量
+        score = 0; // 添加这行
+        updateScoreDisplay(); // 添加这行
         lafe = inilafe;
         HasEnemy = 0;
         board = [];
@@ -947,6 +964,7 @@
             }
             Tanks.splice(index, 1);
             DisEnemy=DisEnemy+1;
+            addScore(Tank.TankType); 
             if(DisEnemy>=AllEnemy)
             {
                 alert("游戏通关");
@@ -961,6 +979,7 @@
                 ClearintTimeFunctions("ICEMoveGo_" + Tank.id);
             }
             Tanks.splice(index, 1);
+            addScore(Tank.TankType); 
             if (lafe < 0) {
                 alert("游戏结束");
                 startGame();
@@ -1157,6 +1176,30 @@
         let dir_index = Math.floor(Math.random() * 4);
         return TankType[dir_index];
     }
+
+    function updateScoreDisplay() {
+        scoreBoard.innerHTML = `当前分数: ${score}<br>最高记录: ${highScore}`;
+    }
+
+    ///毁灭坦克加分
+    function addScore(tankType) {
+        const points = {
+            'PT': 100,   // 普通坦克
+            'LDP':200,
+            'ZT': 200,   // 重型坦克
+            'ZJC': 200,  // 装甲车
+            'BOSS': 500 // BOSS
+        };
+        
+        score += points[tankType] || 100;
+        
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('tankHighScore', highScore);
+        }
+        updateScoreDisplay();
+    }
+
 
     function guid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
